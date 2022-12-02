@@ -2,7 +2,7 @@
 
 ## Tools for searching and text mining transcribed podcasts
 
-HAIL ANDREJ KARPATHY!
+ALL HAIL ANDREJ KARPATHY!
 
 GLORY TO OpenAI WHISPER!
 
@@ -13,53 +13,17 @@ Because of their effort it gets easier and faster to search and analyze transcri
 This project is aiming to provide utils for searching transcribed podcast sites like [Karpathy's Lex Fridman Podcast transcriptions](https://karpathy.ai/lexicap/)
 
 Supported podcasts:
-- `KarpathyFridmanSearcher` for searching [Lex Fridman AI Podcast](https://www.youtube.com/@lexfridman) based on Karpathy's transcription (also see [clips](https://www.youtube.com/@LexClips), although we do not support them yet)
+- `LexFridmanPodcastRetriever` for searching [Lex Fridman AI Podcast](https://www.youtube.com/@lexfridman) based on Karpathy's transcription (also see [clips](https://www.youtube.com/@LexClips), although we do not support them yet)
 
 ### Usage
 
 ```
-import pprint
-from niph import podcast_searchers
-searcher = podcast_searchers.KarpathyFridmanSearcher()
+from niph import podcast_retrievers
+retriever = podcast_retrievers.LexFridmanPodcastRetriever()
 
-results = searcher.search("machine learning", max_results=2)
->>> pprint.pprint(results)
-[{'body': 'Lexicap: Lex Fridman Podcast Whisper captions. These are '
-          'transcripts for Lex Fridman episodes. First we get all the episodes '
-          'in the playlist (ty youtubesearchpython ), see their docs. Then we '
-          'download the audio for all of them (ty yt-dlp ): yt-dlp -x '
-          '--audio-format mp3 -o {mp3_file} -- {youtube_video_id}',
-  'href': 'https://karpathy.ai/lexicap/',
-  'title': 'Lexicap: Lex Fridman Podcast Whisper captions - karpathy.ai'},
- {'body': 'The machine learning person says, look, my algorithm does well on '
-          'the. link | 01:17:20.240. test set. And its a clean test set. I '
-          'didnt peek. And the machine in the business person says, link | '
-          '01:17:25.440. thank you very much, but your algorithm sucks. It '
-          'doesnt work. And the machine learning person ...',
-  'href': 'https://karpathy.ai/lexicap/0073-small.html',
-  'title': 'Lexicap - karpathy.ai'}]
+results = retriever.retrieve("search engines", max_results=2)
 ```
 
-*The KarpathyFridmanSearcher also supports augmented search that makes navigating website easier. It adds link field that links to closest found Karpathy's site link with timestamp. Be aware though that these links are addded from the text responses from search engine, so they will not be available for all records though.*
+Returns results that rendered in HTML look something like this
 
-```
-results = searcher.augmented_search("machine learning", max_results=2)
->>> pprint.pprint(results)
-[{'title': 'Lexicap', 'href': 'https://karpathy.ai/lexicap/0040-large.html', 'body': 'Regina Barzilay: Deep Learning for Cancer Diagnosis and Treatment | Lex Fridman Podcast #40. When broadly, before we talk about how machine learning'},
-pprint.pprint(searcher.augmented_search("machine learning")[:2])
-[{'body': 'Lexicap: Lex Fridman Podcast Whisper captions. These are '
-          'transcripts for Lex Fridman episodes. First we get all the episodes '
-          'in the playlist (ty youtubesearchpython ), see their docs. Then we '
-          'download the audio for all of them (ty yt-dlp ): yt-dlp -x '
-          '--audio-format mp3 -o {mp3_file} -- {youtube_video_id}',
-  'href': 'https://karpathy.ai/lexicap/',
-  'title': 'Lexicap: Lex Fridman Podcast Whisper captions - karpathy.ai'},
- {'body': 'The machine learning person says, look, my algorithm does well on '
-          'the. link | 01:17:20.240. test set. And its a clean test set. I '
-          'didnt peek. And the machine in the business person says, link | '
-          '01:17:25.440. thank you very much, but your algorithm sucks. It '
-          'doesnt work. And the machine learning person ...',
-  'href': 'https://karpathy.ai/lexicap/0073-small.html',
-  'link': 'https://karpathy.ai/lexicap/0073-small.html#01:17:20.240',
-  'title': 'Lexicap - karpathy.ai'}]
-```
+<table border="1" class="dataframe">  <thead>    <tr style="text-align: right;">      <th></th>      <th>episode</th>      <th>text</th>      <th>timestamp_link</th>      <th>distance</th>    </tr>  </thead>  <tbody>    <tr>      <th>0</th>      <td>David Ferrucci: IBM Watson, Jeopardy &amp; Deep Conversations with AI | Lex Fridman Podcast #44</td>      <td>using open source search engines,</td>      <td>https://karpathy.ai/lexicap/0044-large.html#01:14:12.700</td>      <td>20.075276</td>    </tr>    <tr>      <th>1</th>      <td>David Ferrucci: IBM Watson, Jeopardy &amp; Deep Conversations with AI | Lex Fridman Podcast #44</td>      <td>and modified those search engines,</td>      <td>https://karpathy.ai/lexicap/0044-large.html#01:14:22.540</td>      <td>20.075276</td>    </tr>    <tr>      <th>2</th>      <td>Rajat Monga: TensorFlow | Lex Fridman Podcast #22</td>      <td>and many other search engines across the world.</td>      <td>https://karpathy.ai/lexicap/0022-large.html#01:05:57.500</td>      <td>17.332366</td>    </tr>    <tr>      <th>3</th>      <td>David Ferrucci: IBM Watson, Jeopardy &amp; Deep Conversations with AI | Lex Fridman Podcast #44</td>      <td>but we had a number of different search engines</td>      <td>https://karpathy.ai/lexicap/0044-large.html#01:14:16.100</td>      <td>17.332366</td>    </tr>    <tr>      <th>4</th>      <td>Brendan Eich: JavaScript, Firefox, Mozilla, and Brave | Lex Fridman Podcast #160</td>      <td>This is why a lot of the search engines</td>      <td>https://karpathy.ai/lexicap/0160-large.html#01:59:59.780</td>      <td>17.332366</td>    </tr>  </tbody></table>
